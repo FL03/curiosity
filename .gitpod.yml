@@ -1,0 +1,3 @@
+tasks:
+  - init: sh scripts/setup.sh
+    command: nix shell -c cargo build --release --workspace

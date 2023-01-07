@@ -18,6 +18,16 @@ pub enum Commands {
 }
 
 impl Commands {
+    pub fn analyzing(&self) -> Result<&Self> {
+        tracing::info!("Analyzing the codespace...");
+        command("cargo", vec!["clippy", "--all", "--allow-dirty", "--fix"])?;
+        Ok(self)
+    }
+    pub fn formatting(&self) -> Result<&Self> {
+        tracing::info!("Formatting the codespace...");
+        command("cargo", vec!["fmt", "--all"])?;
+        Ok(self)
+    }
     pub fn testing(&self) -> Result<&Self> {
         tracing::info!("Testing the workspace...");
         command(
@@ -27,10 +37,8 @@ impl Commands {
         Ok(self)
     }
     pub fn auto(&self) -> Result<&Self> {
-        tracing::info!("Formatting the codespace...");
-        command("cargo", vec!["fmt", "--all"])?;
-        tracing::info!("Analyzing the codespace...");
-        command("cargo", vec!["clippy", "--all", "--allow-dirty", "--fix"])?;
+        self.analyzing()?.formatting()?;
+        
         Builder::default().handler()?;
         self.testing()?;
         Ok(self)

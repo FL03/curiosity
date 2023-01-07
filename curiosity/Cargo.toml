@@ -18,16 +18,23 @@ test = true
 # substrate-wasm-builder = "5.0.0"
 
 [dev-dependencies]
+wasm-bindgen-test = "0.3.33"
 
 [dependencies]
+fluidity = { features = [], git = "https://github.com/scattered-systems/flow", branch="beta", version = "0.1.12"}
+
 futures = "0.3.25"
 gloo = { features = [ "futures" ], version = "0.8" }
 js-sys = { features = [], version = "0.3.60" }
 serde = { features = ["derive"], version = "1" }
 serde_json = "1"
 strum = { features = ["derive"], version = "0.24.1" }
-tokio_wasi = { features = [""], version = "1.21.3" }
+tokio_wasi = { features = [], version = "1.23.0" }
 wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2.83"}
+
+[dependencies.web-sys]
+features = ["Node"]
+version = "0.3.60"
 
 [package.metadata.docs.rs]
 all-features = true

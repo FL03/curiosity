@@ -1,25 +1,13 @@
 /*
-    Appellation: xtask <binary>
-    Contrib: FL03 <jo3mccain@icloud.com>
+    Appellation: xtask <library>
+    Contrib: FL03 <jo3mccain@icloud.com> (https://github.com/FL03)
     Description: ... Summary ...
 */
-pub use self::utils::*;
 
+pub use self::{commands::*, utils::*};
+
+pub(crate) mod commands;
 pub(crate) mod utils;
-
-pub mod cli;
-
-fn main() -> anyhow::Result<()> {
-    tracing_subscriber::fmt::init();
-    tracing::info!("Welcome to xtask...");
-
-    let handle = std::thread::spawn(move || {
-        cli::handle().join().unwrap();
-    });
-    handle.join().ok().unwrap();
-
-    Ok(())
-}
 
 ///
 pub type Bundle<T = String> = std::collections::HashMap<T, Vec<Vec<T>>>;

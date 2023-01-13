@@ -13,19 +13,19 @@ pub struct Application {
 
 /// The base application object to be launched
 pub fn app(cx: Scope) -> Element {
-    let banner = "Puzzled".to_string();
+    let banner = env!("CARGO_PKG_NAME").to_string();
 
     cx.render(rsx!(
         div { class: "bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 flex flex-col items-center justify-center m-0 p-0 z-0 min-h-screen min-w-full max-w-screen",
             header { class: "body-font prose prose-invert",
-                NavBar { banner: banner.to_string() }
+                NavBar { banner: banner.clone() }
             }
             section { class: "flex flex-col grow items-center justify-center min-h-full max-h-screen min-w-full max-w-screen z-0",
                 div { class: "container mx-auto flex px-5 py-24 md:flex-row flex-col items-center",
                     div { class: "lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center",
                         h1 { class: "title-font sm:text-4xl text-3xl mb-4 font-medium text-white",
                             br { class: "hidden lg:inline-block" }
-                            "Puzzled"
+                            banner
                         }
                         p {
                             class: "mb-8 leading-relaxed",

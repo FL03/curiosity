@@ -5,12 +5,12 @@ let
     overlays = [ (import rust-overlay) ];
   };
 
-  rustVersion = "1.68.0";
+  rustVersion = "1.66.0";
   wasmUnknownUknown = "wasm32-unknown-unknown";
-  wasm32Wasi = "wasm32-wasi";
+  wasmWasi = "wasm32-wasi";
 
 
-  rustWithWasmTarget = rustPkgs.rust-bin.nightly.${rustVersion}.default.override {
+  rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
     targets = [ wasmUnknownUknown ];
   };
 
@@ -31,7 +31,20 @@ let
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
   };
 in {
-  workspace = pkgs.rustPlatformWasm.buildRustPackage (common // {
-    cargoBuildFlags = "--release --workspace";
+  # app = pkgs.rustPlatform.buildRustPackage (common // {
+  #   pname = "xtask";
+  #   cargoBuildFlags = "-p xtask";
+  # });
+
+  wasm = rustPlatformWasm.buildRustPackage (common // {
+    pname = "curiosity";
+
+    buildPhase = ''
+      cargo build --release -p curiosity --target=wasm32-unknown-unknown
+    '';  
+    installPhase = ''
+      mkdir -p $out/lib
+      cp target/wasm32-unknown-unknown/release/*.wasm $out/lib/
+    '';  
   });
 }

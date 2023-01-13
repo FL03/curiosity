@@ -21,11 +21,6 @@
 **/*.bk
 **/*.bk.*
 
-**/config.*
-**/*.config.*
-
-!**/default.config.*
-
 **/*.csv
 **/*.csv.*
 
@@ -33,16 +28,6 @@
 **/*.db.*
 
 **/*.db-*.*
-
-**/*.env
-**/*.env.*
-
-**/!*.env.example
-
-**/*.lock
-**/*.lock.*
-
-**/*-lock.*
 
 **/*.log
 **/*.log.*
@@ -52,4 +37,3 @@
 
 **/*.zip
 **/*.zip.*
-!/.gitignore

@@ -9,31 +9,40 @@ license = "Apache-2.0"
 name = "curiosity"
 repository = "https://github.com/FL03/curiosity"
 version = "0.1.0"
-
 [lib]
 crate-type = [ "cdylib", "rlib" ]
 test = true
 
+[[bin]]
+name = "web"
+path = "src/bin/web/main.rs"
+test = false
+
 [build-dependencies]
-# substrate-wasm-builder = "5.0.0"
+substrate-wasm-builder = "6.0.0"
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.33"
+wasm-bindgen-test = "0.3"
 
 [dependencies]
-fluidity = { features = [], git = "https://github.com/scattered-systems/flow", branch="beta", version = "0.1.12"}
-
+dioxus = { features = ["macro"], version = "0.3" }
+dioxus-web = { features = ["hydrate"], version = "0.3" }
 futures = "0.3.25"
 gloo = { features = [ "futures" ], version = "0.8" }
 js-sys = { features = [], version = "0.3.60" }
 serde = { features = ["derive"], version = "1" }
 serde_json = "1"
 strum = { features = ["derive"], version = "0.24.1" }
-tokio_wasi = { features = [], version = "1.23.0" }
+
 wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2.83"}
+wasm-bindgen-futures = "0.4"
 
 [dependencies.web-sys]
-features = ["Node"]
+features = [
+    "CanvasRenderingContext2d",
+    "HtmlCanvasElement",
+    "Node"
+]
 version = "0.3.60"
 
 [package.metadata.docs.rs]

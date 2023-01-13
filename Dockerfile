@@ -7,37 +7,23 @@ FROM base as builder-base
 RUN apt-get install -y \
     protobuf-compiler
 
+RUN rustup default nightly && \
+    rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly && \
+    cargo install trunk wasm-bindgen-cli
+
 FROM builder-base as builder
 
 ENV CARGO_TERM_COLOR=always
 
-ADD . /app
-WORKDIR /app
+ADD . /workspace
+WORKDIR /workspace
 
 COPY . .
-RUN cargo build --release -v --workspace
+RUN trunk build
 
-FROM debian:buster-slim as runner-base
+FROM builder
 
-RUN apt-get update -y && apt-get upgrade -y 
+EXPOSE 8080
 
-RUN apt-get install -y libssl-dev protobuf-compiler
-
-FROM runner-base as runner
-
-ENV RUST_LOG="info" \
-    SERVER_PORT=8080 
-
-COPY --chown=55 .config /config
-VOLUME ["/config"]
-
-COPY --from=builder /app/target/release/pzzld /bin/pzzld
-
-FROM runner
-
-EXPOSE 80
-EXPOSE ${SERVER_PORT}
-EXPOSE 6379
-
-ENTRYPOINT [ "pzzld" ]
-CMD [ "system", "--up" ]
+ENTRYPOINT [ "trunk" ]
+CMD [ "serve" ]

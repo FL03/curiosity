@@ -31,7 +31,9 @@ CMD [ "serve" ]
 
 FROM scratch as wasm
 
-COPY --from=builder /workspace/dist /dist
-COPY --from=builder /workspace/target/release/xtask /xtask
+COPY --from=builder /workspace/dist /app/dist
+COPY --from=builder /workspace/target/release/xtask /app/xtask
 
-CMD [ "xtask" ]
+WORKDIR /app
+
+EXPOSE 8080

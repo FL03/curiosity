@@ -19,7 +19,7 @@
             name = "all";
             paths = with code; [ wasm ];
           };
-        default = packages.all;
+          default = packages.all;
         };
       }
     );

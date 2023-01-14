@@ -54,6 +54,8 @@ pub fn Hero(cx: Scope<HeroScope>) -> Element {
 /// The base application object to be launched
 pub fn app(cx: Scope) -> Element {
     let banner = "Curiosity".to_string();
+    let md = "# Welcome";
+    let res =  crate::markdown_to_html(md.to_string());
 
     cx.render(rsx!(
         div { class: "bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 flex flex-col items-center justify-center m-0 p-0 z-0 min-h-screen min-w-full max-w-screen",
@@ -62,7 +64,7 @@ pub fn app(cx: Scope) -> Element {
             }
             main { class: "flex flex-col grow items-center justify-center min-h-full max-h-screen min-w-full max-w-screen z-0",
                 div { class: "container mx-auto flex px-5 py-24 md:flex-row flex-col items-center",
-                    Hero { banner: banner.clone() }
+                    Hero { banner: banner.clone() },
                 }
             }
         }

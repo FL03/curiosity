@@ -7,8 +7,9 @@ use crate::components::nav::navbar::NavBar;
 use dioxus::prelude::*;
 
 #[derive(Clone, Debug, Default, Eq, Hash, PartialEq, Props)]
-pub struct Application {
-    name: String,
+pub struct ApplicationScope {
+    pub name: String,
+    pub content: String
 }
 
 #[derive(Clone, Debug, Default, Eq, Hash, PartialEq, Props)]
@@ -27,7 +28,6 @@ pub fn Hero(cx: Scope<HeroScope>) -> Element {
             p {
                 class: "mb-8 leading-relaxed",
                 "Welcome to Puzzled, a personal Ethereum namespace where I try out new features proposed for the scsys ecosystem."
-
             }
             div { class: "flex justify-center",
                 button {
@@ -54,8 +54,6 @@ pub fn Hero(cx: Scope<HeroScope>) -> Element {
 /// The base application object to be launched
 pub fn app(cx: Scope) -> Element {
     let banner = "Curiosity".to_string();
-    let md = "# Welcome";
-    let res =  crate::markdown_to_html(md.to_string());
 
     cx.render(rsx!(
         div { class: "bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 flex flex-col items-center justify-center m-0 p-0 z-0 min-h-screen min-w-full max-w-screen",

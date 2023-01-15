@@ -10,12 +10,11 @@ RUN apt-get install -y \
     protobuf-compiler
 
 RUN rustup default nightly && \
-    rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly && \
-    cargo install trunk wasm-bindgen-cli
+    rustup target add wasm32-wasi --toolchain nightly
 
 RUN curl -sSf https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/install.sh | bash
 
-RUN source $HOME/.wasmedge/env
+RUN . $HOME/.wasmedge/env
 
 FROM builder-base as builder
 

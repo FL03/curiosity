@@ -14,8 +14,6 @@ RUN rustup default nightly && \
 
 RUN curl -sSf https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/install.sh | bash
 
-RUN . $HOME/.wasmedge/env
-
 FROM builder-base as builder
 
 ENV CARGO_TERM_COLOR=always
@@ -25,11 +23,13 @@ WORKDIR /workspace
 
 COPY . .
 RUN cargo build --release --target wasm32-wasi
-RUN wasmedgec target/wasm32-wasi/release/curiosity.wasm curiosity.aot.wasm
+RUN /root/.wasmedge/bin/wasmedgec target/wasm32-wasi/release/curiosity.wasm curiosity.aot.wasm
 
 FROM scratch
 
-COPY --from=builder /workspace/target/wasm32-wasi/release/curiosity.wasm curiosity.wasm
-COPY --from=builder /workspace/curiosity.aot.wasm curiosity.aot.wasm
+COPY --from=builder /workspace/target/wasm32-wasi/release/curiosity.wasm /curiosity.wasm
+COPY --from=builder /workspace/curiosity.aot.wasm /curiosity.aot.wasm
 
 EXPOSE 8080
+
+ENTRYPOINT [ "curiosity.aot.wasm" ]

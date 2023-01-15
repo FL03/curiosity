@@ -18,9 +18,8 @@ use tower_http::services::ServeDir;
 async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
     tracing::info!("Welcome to xtask...");
-    wasm_server().await?;
 
-    cli()?;
+    handler().await?;
 
     Ok(())
 }
@@ -47,6 +46,7 @@ pub fn base_matches(sc: Command) -> ArgMatches {
                 .value_parser(value_parser!(u16).range(1..))
                 .default_value("8080"),
         )
+        .arg(arg!(up: -u --up ...).action(ArgAction::SetTrue))
         .arg_required_else_help(true)
         .propagate_version(true)
         .subcommand(sc)
@@ -54,68 +54,41 @@ pub fn base_matches(sc: Command) -> ArgMatches {
         .get_matches()
 }
 
-pub fn cli() -> anyhow::Result<()> {
-    let matches = base_matches(
+pub fn cli() -> ArgMatches {
+    base_matches(
         Command::new("app")
-            .about("Application commands")
-            .arg(arg!(build: -b --build <BUILD> "Build the workspace"))
-            .arg(arg!(serve: -s --serve <BUILD> "Build the workspace")),
-    );
+        .about("Application commands")
+        .arg(arg!(build: -b --build <BUILD> "Build the workspace"))
+        .arg(arg!(serve: -s --serve <PKG> "Build the workspace")),
+    )
+}
 
-    let port: u16 = *matches.get_one::<u16>("PORT").unwrap();
+pub async fn handler() -> anyhow::Result<()> {
+    let root = project_root().to_str().unwrap().to_string();
+    let dist = format!("{}/{}", root, "dist");
+
+    let matches = cli();
+
+    let port: u16 = *matches.get_one::<u16>("port").unwrap();
+
+    if let Some(_up) = matches.clone().get_one::<bool>("up") {
+        wasm_server(dist.as_str(), Some(port)).await?;
+    }
 
     println!("{:?}", port);
     Ok(())
 }
 
-pub struct System {
-    pub workdir: String,
-}
-
-impl System {
-    pub fn new(workdir: Option<String>) -> Self {
-        Self {
-            workdir: workdir.unwrap_or_else(|| "/pkg".to_string()),
-        }
-    }
-}
 
 /// Quickstart a server for static assets
-pub async fn wasm_server() -> anyhow::Result<()> {
-    let root = project_root().to_str().unwrap().to_string();
-    let dist = format!("{}/{}", root, "dist");
-
-    let serve_dir = get_service(ServeDir::new(dist.as_str())).handle_error(handle_error);
+pub async fn wasm_server(path: &str, port: Option<u16>) -> anyhow::Result<()> {
+    let serve_dir = get_service(ServeDir::new(path)).handle_error(handle_error);
     let app = axum::Router::new().nest_service("/", serve_dir);
-    axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())
+    axum::Server::bind(&std::net::SocketAddr::from(([0, 0, 0, 0], port.unwrap_or(8080))))
         .serve(app.into_make_service())
         .await
         .unwrap();
     Ok(())
-}
-
-pub struct Wasm {
-    pub port: u16,
-    pub workdir: String,
-}
-
-impl Wasm {
-    pub fn new(port: u16, workdir: String) -> Self {
-        Self { port, workdir }
-    }
-    pub async fn client(&self) -> axum::Router {
-        let serve_dir =
-            get_service(ServeDir::new(self.workdir.as_str())).handle_error(handle_error);
-        axum::Router::new().nest_service("/", serve_dir)
-    }
-}
-
-impl Default for Wasm {
-    fn default() -> Self {
-        let root = project_root().to_str().unwrap().to_string();
-        let workdir = format!("{}/{}", root, "dist");
-        Wasm::new(8080, workdir)
-    }
 }
 
 async fn handle_error(_err: std::io::Error) -> impl IntoResponse {

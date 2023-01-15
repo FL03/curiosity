@@ -6,6 +6,16 @@
 use crate::{command, dist_dir};
 use anyhow::Result;
 
+use clap::{Args, ArgAction};
+
+#[derive(Args, Clone, Debug, Default, Eq, Hash, PartialEq)]
+pub struct Builder {
+    #[arg(action = ArgAction::SetTrue, long, short)]
+    pub release: bool,
+    #[arg(action = ArgAction::SetTrue, long, short)]
+    pub workspace: bool
+}
+
 ///
 pub fn builder(release: bool, workspace: bool) -> Result<()> {
     let mut args = vec!["build"];

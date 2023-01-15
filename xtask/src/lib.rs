@@ -4,10 +4,12 @@
     Description: ... Summary ...
 */
 
-pub use self::{commands::*, utils::*};
+pub use self::{interface::*, utils::*};
 
-pub(crate) mod commands;
+pub(crate) mod interface;
 pub(crate) mod utils;
+
+pub mod cmds;
 
 ///
 pub type Bundle<T = String> = std::collections::HashMap<T, Vec<Vec<T>>>;

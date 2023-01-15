@@ -35,6 +35,13 @@ jobs:
           rustup default nightly
           rustup target add ${{ matrix.target }} --toolchain nightly
       - run: cargo build --release -v --target ${{ matrix.target }}
+      - name: Cache
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-crates
+        with:
+          path: |
+            ~/target/wasm32-wasi/release/*.wasm
   publish:
     if: ${{ github.event.inputs.publish }}
     name: Publish

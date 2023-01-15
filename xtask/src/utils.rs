@@ -3,9 +3,10 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
+use crate::Bundle;
 use anyhow::Result;
 use std::path::{Path, PathBuf};
-use std::{collections::HashMap, fs, io, process::Command};
+use std::{fs, io, process::Command};
 
 ///
 pub fn command(program: &str, args: &[&str]) -> Result<()> {
@@ -33,7 +34,7 @@ pub fn dist_dir() -> PathBuf {
     project_root().join(".artifacts/dist")
 }
 ///
-pub fn execute_bundle(bundle: HashMap<&str, Vec<Vec<&str>>>) -> Result<()> {
+pub fn execute_bundle(bundle: Bundle<&str>) -> Result<()> {
     for k in bundle.keys() {
         // Step 1: Rustup
         for i in 0..bundle[k].len() {
@@ -44,7 +45,7 @@ pub fn execute_bundle(bundle: HashMap<&str, Vec<Vec<&str>>>) -> Result<()> {
     }
     Ok(())
 }
-/// Fetch the project root unless specified otherwise with a CARGO_MANIFEST_DIR env variable
+/// Fetch the package name
 pub fn package_name() -> String {
     env!("CARGO_PKG_NAME").to_string()
 }

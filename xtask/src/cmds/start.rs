@@ -26,3 +26,10 @@ pub struct Start {
     #[arg(action = ArgAction::SetTrue, long, short)]
     pub workspace: bool,
 }
+
+impl Start {
+    pub fn handle(&self) -> Result<&Self> {
+        runner(self.release.clone(), "curiosity")?;
+        Ok(self)
+    }
+}

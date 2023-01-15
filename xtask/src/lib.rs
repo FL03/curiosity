@@ -9,6 +9,7 @@ pub(crate) mod interface;
 pub(crate) mod utils;
 
 pub mod cmds;
+pub mod server;
 
 ///
 pub type Bundle<T = String> = std::collections::HashMap<T, Vec<Vec<T>>>;

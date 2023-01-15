@@ -9,17 +9,34 @@ pub mod setup;
 pub mod start;
 pub mod test;
 
-use clap::{ArgAction, Parser};
+use anyhow::Result;
+use clap::Subcommand;
 
-#[derive(Clone, Debug, Eq, Hash, Parser, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq, Subcommand)]
 
-pub struct CommandLineInterface {
-    #[arg(action = ArgAction::SetTrue, long, short)]
-    pub debug: bool,
+pub enum Commands {
+    Build(build::Build),
+    Setup(setup::Setup),
+    Start(start::Start),
+    Test(test::Test),
 }
 
-impl Default for CommandLineInterface {
-    fn default() -> Self {
-        Self::parse()
+impl Commands {
+    pub fn handle(&self) -> Result<&Self> {
+        match self.clone() {
+            Self::Build(build) => {
+                build.handle()?;
+            },
+            Self::Setup(setup) => {
+                setup.handle()?;
+            },
+            Self::Start(start) => {
+                start.handle()?;
+            },
+            Self::Test(test) => {
+                test.handle()?;
+            }
+        }
+        Ok(self)
     }
 }

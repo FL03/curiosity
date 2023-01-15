@@ -13,6 +13,13 @@ pub struct Test {
     pub all: bool,
 }
 
+impl Test {
+    pub fn handle(&self) -> Result<&Self> {
+        testing()?;
+        Ok(self)
+    }
+}
+
 ///
 pub fn testing() -> Result<()> {
     command("cargo", &["test", "--all", "--all-features"])

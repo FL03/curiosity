@@ -10,19 +10,28 @@ use clap::{ArgAction, Args};
 #[derive(Args, Clone, Debug, Default, Eq, Hash, PartialEq)]
 pub struct Setup {
     #[arg(action = ArgAction::SetTrue, long, short)]
-    pub release: bool,
-    #[arg(action = ArgAction::SetTrue, long, short)]
-    pub workspace: bool,
+    pub extras: bool,
 }
 
-pub fn setup(extras: bool) -> Result<()> {
-    // Artifacts
+impl Setup {
+    pub fn handle(&self) -> Result<&Self> {
+        setup(self.extras.clone())?;
+        Ok(self)
+    }
+}
+
+pub fn setup_artifacts() -> Result<()> {
     if std::fs::create_dir_all(&dist_dir()).is_err() {
         tracing::info!("Clearing out the previous build");
         std::fs::remove_dir_all(&dist_dir())?;
         std::fs::create_dir_all(&dist_dir())?;
     };
-    command("nix", &["flake", "update"])?;
+    Ok(())
+}
+
+pub fn setup(extras: bool) -> Result<()> {
+    // Artifacts
+    setup_artifacts()?;
     command("rustup", &["default", "nightly"])?;
     command(
         "rustup",
@@ -35,6 +44,7 @@ pub fn setup(extras: bool) -> Result<()> {
             "nightly",
         ],
     )?;
+    command("curl", &["-sSf", "https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/install.sh", "|", "bash"])?;
     if extras {
         command(
             "rustup",
@@ -47,7 +57,6 @@ pub fn setup(extras: bool) -> Result<()> {
                 "nightly",
             ],
         )?;
-        command("npm", &["install", "-g", "wasm-pack"])?;
     };
     Ok(())
 }

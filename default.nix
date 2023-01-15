@@ -11,7 +11,7 @@ let
 
 
   rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
-    targets = [ wasmUnknownUknown ];
+    targets = [ wasmWasi ];
   };
 
   rustPlatformWasm = makeRustPlatform {
@@ -40,11 +40,11 @@ in {
     pname = "curiosity";
 
     buildPhase = ''
-      cargo build --release -p curiosity --target=wasm32-unknown-unknown
+      cargo build --release -p curiosity --target=wasm32-wasi
     '';  
     installPhase = ''
       mkdir -p $out/lib
-      cp target/wasm32-unknown-unknown/release/*.wasm $out/lib/
+      cp target/wasm32-wasi/release/*.wasm $out/lib/
     '';  
   });
 }

@@ -5,11 +5,17 @@ RUN apt-get update -y && apt-get upgrade -y
 FROM base as builder-base
 
 RUN apt-get install -y \
+    clang \
+    git \
     protobuf-compiler
 
 RUN rustup default nightly && \
     rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly && \
     cargo install trunk wasm-bindgen-cli
+
+RUN curl -sSf https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/install.sh | bash
+
+RUN source $HOME/.wasmedge/env
 
 FROM builder-base as builder
 
@@ -19,21 +25,12 @@ ADD . /workspace
 WORKDIR /workspace
 
 COPY . .
-RUN trunk build
-RUN cargo build -p xtask --release
+RUN cargo build --release --target wasm32-wasi
+RUN wasmedgec target/wasm32-wasi/release/curiosity.wasm curiosity.aot.wasm
 
-FROM builder
+FROM scratch
 
-EXPOSE 8080
-
-ENTRYPOINT [ "trunk" ]
-CMD [ "serve" ]
-
-FROM scratch as wasm
-
-COPY --from=builder /workspace/dist /app/dist
-COPY --from=builder /workspace/target/release/xtask /app/xtask
-
-WORKDIR /app
+COPY --from=builder /workspace/target/wasm32-wasi/release/curiosity.wasm curiosity.wasm
+COPY --from=builder /workspace/curiosity.aot.wasm curiosity.aot.wasm
 
 EXPOSE 8080

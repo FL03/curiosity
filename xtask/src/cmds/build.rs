@@ -5,14 +5,19 @@
 */
 use crate::command;
 use anyhow::Result;
-use clap::{Args, ArgAction};
+use clap::{ArgAction, Args};
+use std::sync::mpsc;
+
+pub fn build_channels() -> (mpsc::Sender<Build>, mpsc::Receiver<Build>) {
+    mpsc::channel()
+}
 
 #[derive(Args, Clone, Debug, Default, Eq, Hash, PartialEq)]
 pub struct Build {
     #[arg(action = ArgAction::SetTrue, long, short)]
     pub release: bool,
     #[arg(action = ArgAction::SetTrue, long, short)]
-    pub workspace: bool
+    pub workspace: bool,
 }
 
 impl Build {
@@ -26,23 +31,7 @@ impl Build {
             tracing::info!("Building the workspace...");
             args.push("--workspace");
         }
+        command("cargo", args.as_slice())?;
         Ok(self)
     }
 }
-
-///
-pub fn builder(release: bool, workspace: bool) -> Result<()> {
-    let mut args = vec!["build"];
-    if release {
-        args.push("--release");
-    }
-    if workspace {
-        args.push("--workspace");
-    }
-    command("cargo", args.as_slice())
-}
-
-
-
-
-

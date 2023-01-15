@@ -14,7 +14,7 @@ test = false
 [[bin]]
 bench = false
 name = "xtask"
-path = "src/bin/xtask/main.rs"
+path = "src/main.rs"
 test = false
 
 [build-dependencies]

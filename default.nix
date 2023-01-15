@@ -5,7 +5,7 @@ let
     overlays = [ (import rust-overlay) ];
   };
 
-  rustVersion = "1.68.0";
+  rustVersion = "1.66.0";
   wasmTarget = "wasm32-wasi";
 
 
@@ -39,7 +39,7 @@ in {
     pname = "curiosity";
 
     buildPhase = ''
-      cargo build --release -p curiosity --target=wasm32-wasi
+      cargo build --release --target=wasm32-wasi
     '';  
     installPhase = ''
       mkdir -p $out/lib

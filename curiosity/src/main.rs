@@ -3,6 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com> (https://github.com/FL03)
     Description: ... Summary ...
 */
+use curiosity_sdk::AsyncResult;
 use std::net::SocketAddr;
 
 use hyper::server::conn::Http;
@@ -11,19 +12,34 @@ use hyper::{Body, Method, Request, Response, StatusCode};
 use tokio::net::TcpListener;
 
 #[tokio::main(flavor = "current_thread")]
-async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+async fn main() -> AsyncResult {
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
 
-    let listener = TcpListener::bind(addr).await?;
-    println!("Listening on http://{}", addr);
-    loop {
-        let (stream, _) = listener.accept().await?;
+    Server::new(addr).serve().await?;
+    Ok(())
+}
 
-        tokio::task::spawn(async move {
-            if let Err(err) = Http::new().serve_connection(stream, service_fn(echo)).await {
-                println!("Error serving connection: {:?}", err);
-            }
-        });
+pub struct ServerAddress(pub SocketAddr);
+
+pub struct Server {
+    pub address: SocketAddr,
+}
+
+impl Server {
+    pub fn new(address: SocketAddr) -> Self {
+        Self { address }
+    }
+    pub async fn serve(&self) -> AsyncResult {
+        let listener = TcpListener::bind(self.address).await?;
+        loop {
+            let (stream, _) = listener.accept().await?;
+
+            tokio::task::spawn(async move {
+                if let Err(err) = Http::new().serve_connection(stream, service_fn(echo)).await {
+                    println!("Error serving connection: {:?}", err);
+                }
+            });
+        }
     }
 }
 
@@ -54,5 +70,3 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
         }
     }
 }
-
-

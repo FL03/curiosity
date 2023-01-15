@@ -5,5 +5,9 @@
 */
 use wasm_bindgen::prelude::JsError;
 
+pub type AsyncError = Box<dyn std::error::Error + Send + Sync>;
+
+pub type AsyncResult<T = ()> = Result<T, AsyncError>;
+
 /// Type alias for a [Result] of type T and error [JsError]
 pub type JsResult<T = ()> = Result<T, JsError>;

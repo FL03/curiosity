@@ -168,7 +168,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "curiosity"
+name = "curiosity-sdk"
 version = "0.1.0"
 dependencies = [
  "futures",

@@ -5,16 +5,15 @@
 */
 use crate::{command, dist_dir};
 use anyhow::Result;
-use clap::{Args, ArgAction};
+use clap::{ArgAction, Args};
 
 #[derive(Args, Clone, Debug, Default, Eq, Hash, PartialEq)]
 pub struct Setup {
     #[arg(action = ArgAction::SetTrue, long, short)]
     pub release: bool,
     #[arg(action = ArgAction::SetTrue, long, short)]
-    pub workspace: bool
+    pub workspace: bool,
 }
-
 
 pub fn setup(extras: bool) -> Result<()> {
     // Artifacts

@@ -5,13 +5,13 @@
 */
 use crate::JsResult;
 use gloo::net::http::{Request, RequestRedirect, Response};
-use pulldown_cmark::{Parser, Options, html};
+use pulldown_cmark::{html, Options, Parser};
 
 /// Function for quickly converting markdown into html
 pub fn markdown_to_html(input: String) -> String {
     let mut options = Options::empty();
     options.insert(Options::ENABLE_STRIKETHROUGH);
-    
+
     let parser = Parser::new_ext(input.as_str(), options);
 
     // Write to String buffer.

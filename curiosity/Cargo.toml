@@ -2,21 +2,22 @@
 authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)"]
 categories = []
 default-run = "curiosity"
-description = "curiosity"
+description = "curiosity is a simple microservice"
 edition = "2021"
 homepage = "https://github.com/FL03/curiosity/wiki"
 keywords = []
 license = "Apache-2.0"
-name = "curiosity"
+name = "curiosity-sdk"
 repository = "https://github.com/FL03/curiosity"
 version = "0.1.0"
+
 [lib]
 crate-type = [ "cdylib", "rlib" ]
 test = true
 
 [[bin]]
 name = "curiosity"
-path = "src/bin/curiosity/main.rs"
+path = "src/main.rs"
 test = false
 
 [build-dependencies]

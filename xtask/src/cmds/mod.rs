@@ -11,9 +11,15 @@ pub mod test;
 
 use clap::{ArgAction, Parser};
 
-#[derive(Clone, Debug, Default, Eq, Hash, Parser, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, Parser, PartialEq)]
 
 pub struct CommandLineInterface {
     #[arg(action = ArgAction::SetTrue, long, short)]
     pub debug: bool,
+}
+
+impl Default for CommandLineInterface {
+    fn default() -> Self {
+        Self::parse()
+    }
 }

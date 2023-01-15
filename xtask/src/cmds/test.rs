@@ -5,12 +5,12 @@
 */
 use crate::command;
 use anyhow::Result;
-use clap::{Args, ArgAction};
+use clap::{ArgAction, Args};
 
 #[derive(Args, Clone, Debug, Default, Eq, Hash, PartialEq)]
 pub struct Test {
     #[arg(action = ArgAction::SetTrue, long, short)]
-    pub all: bool
+    pub all: bool,
 }
 
 ///

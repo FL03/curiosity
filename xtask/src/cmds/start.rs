@@ -5,17 +5,18 @@
 */
 use crate::command;
 use anyhow::Result;
-use clap::{Args, ArgAction};
+use clap::{ArgAction, Args};
 
 ///
-pub fn runner(release: bool) -> Result<()> {
-    let mut args = vec!["run"];
+pub fn runner(release: bool, pkg: &str) -> Result<()> {
+    let mut target = "target/wasm32-wasi".to_string();
     if release {
-        args.push("--release");
+        target = format!("{}/{}", target, "release");
+    } else {
+        target = format!("{}/{}", target, "debug");
     }
-    args.push("--");
-    args.push("--h");
-    command("cargo", args.as_slice())
+    target = format!("{}/{}.wasm", target, pkg);
+    command("wasmedge", &[target.as_str()])
 }
 
 #[derive(Args, Clone, Debug, Default, Eq, Hash, PartialEq)]
@@ -23,6 +24,5 @@ pub struct Start {
     #[arg(action = ArgAction::SetTrue, long, short)]
     pub release: bool,
     #[arg(action = ArgAction::SetTrue, long, short)]
-    pub workspace: bool
+    pub workspace: bool,
 }
-

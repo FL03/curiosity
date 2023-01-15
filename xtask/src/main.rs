@@ -5,11 +5,7 @@
 */
 use xtask::*;
 
-use axum::{
-    http::StatusCode,
-    response::IntoResponse,
-    routing::get_service,
-};
+use axum::{http::StatusCode, response::IntoResponse, routing::get_service};
 use clap::{arg, command, value_parser, ArgAction, ArgMatches, Command};
 use std::path::PathBuf;
 use tower_http::services::ServeDir;
@@ -35,8 +31,8 @@ pub fn base_matches(sc: Command) -> ArgMatches {
             .value_parser(value_parser!(PathBuf)),
         )
         .arg(
-            arg!(debug:
-                -d --debug ... "Turn debugging information on"
+            arg!(release:
+                -r --release ... "Flag the system to run in release"
             )
             .action(ArgAction::SetTrue),
         )
@@ -57,9 +53,9 @@ pub fn base_matches(sc: Command) -> ArgMatches {
 pub fn cli() -> ArgMatches {
     base_matches(
         Command::new("app")
-        .about("Application commands")
-        .arg(arg!(build: -b --build <BUILD> "Build the workspace"))
-        .arg(arg!(serve: -s --serve <PKG> "Build the workspace")),
+            .about("Application commands")
+            .arg(arg!(build: -b --build <BUILD> "Build the workspace"))
+            .arg(arg!(serve: -s --serve <PKG> "Build the workspace")),
     )
 }
 
@@ -69,26 +65,30 @@ pub async fn handler() -> anyhow::Result<()> {
 
     let matches = cli();
 
+    let release: bool = matches.get_one::<bool>("release").unwrap().clone();
+
     let port: u16 = *matches.get_one::<u16>("port").unwrap();
 
     if let Some(_up) = matches.clone().get_one::<bool>("up") {
-        wasm_server(dist.as_str(), Some(port)).await?;
+        // wasm_server(dist.as_str(), Some(port)).await?;
+        xtask::cmds::start::runner(release, "curiosity")?;
     }
 
     println!("{:?}", port);
     Ok(())
 }
 
-
-
 /// Quickstart a server for static assets
 pub async fn wasm_server(path: &str, port: Option<u16>) -> anyhow::Result<()> {
     let serve_dir = get_service(ServeDir::new(path)).handle_error(handle_error);
     let app = axum::Router::new().nest_service("/", serve_dir);
-    axum::Server::bind(&std::net::SocketAddr::from(([0, 0, 0, 0], port.unwrap_or(8080))))
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    axum::Server::bind(&std::net::SocketAddr::from((
+        [0, 0, 0, 0],
+        port.unwrap_or(8080),
+    )))
+    .serve(app.into_make_service())
+    .await
+    .unwrap();
     Ok(())
 }
 

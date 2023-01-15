@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use xtask::*;
+use xtask_sdk::*;
 
 use axum::{http::StatusCode, response::IntoResponse, routing::get_service};
 use clap::{arg, command, value_parser, ArgAction, ArgMatches, Command};
@@ -71,7 +71,7 @@ pub async fn handler() -> anyhow::Result<()> {
 
     if let Some(_up) = matches.clone().get_one::<bool>("up") {
         // wasm_server(dist.as_str(), Some(port)).await?;
-        xtask::cmds::start::runner(release, "curiosity")?;
+        xtask_sdk::cmds::start::runner(release, "curiosity")?;
     }
 
     println!("{:?}", port);

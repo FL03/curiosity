@@ -3,7 +3,7 @@ authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)", "Scattered-S
 description = "xtask"
 edition = "2021"
 license = "Apache-2.0"
-name = "xtask"
+name = "xtask-sdk"
 publish = false
 version = "0.1.0" # TODO: Update the package version
 
@@ -20,10 +20,6 @@ test = false
 [build-dependencies]
 
 [dependencies]
-proc-macro2 = "1"
-quote = "1"
-syn = { features = ["full"], version = "1" }
-
 anyhow = "1"
 axum = { features = [], version = "0.6" }
 clap = { features = ["cargo", "derive", "env"], version = "4" }

@@ -9,6 +9,10 @@ use std::path::{Path, PathBuf};
 use std::{fs, io, process::Command};
 
 ///
+pub fn clippy() -> Result<()> {
+    command("cargo", &["clippy", "--all", "--allow-dirty", "--fix"])
+}
+///
 pub fn command(program: &str, args: &[&str]) -> Result<()> {
     let mut cmd = Command::new(program);
     cmd.current_dir(project_root());
@@ -56,4 +60,8 @@ pub fn project_root() -> PathBuf {
         .nth(1)
         .unwrap()
         .to_path_buf()
+}
+///
+pub fn rustfmt() -> Result<()> {
+    command("cargo", &["fmt", "--all"])
 }

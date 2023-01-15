@@ -25,7 +25,9 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
+        platform: [ macos-latest, ubuntu-latest, windows-latest ]
         target:
           - wasm32-wasi
     steps:
@@ -40,12 +42,13 @@ jobs:
         env:
           cache-name: cache-crates
         with:
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/cargo.lock') }}
           path: |
             ~/target/wasm32-wasi/release/*.wasm
   publish:
     if: ${{ github.event.inputs.publish }}
     name: Publish
-    # needs: sdk
+    needs: [ build ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

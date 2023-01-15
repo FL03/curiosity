@@ -80,6 +80,7 @@ pub async fn handler() -> anyhow::Result<()> {
 }
 
 
+
 /// Quickstart a server for static assets
 pub async fn wasm_server(path: &str, port: Option<u16>) -> anyhow::Result<()> {
     let serve_dir = get_service(ServeDir::new(path)).handle_error(handle_error);

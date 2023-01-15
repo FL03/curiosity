@@ -5,7 +5,9 @@
 */
 
 pub mod build;
-
+pub mod setup;
+pub mod start;
+pub mod test;
 
 use clap::{ArgAction, Parser};
 

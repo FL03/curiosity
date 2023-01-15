@@ -5,13 +5,12 @@ let
     overlays = [ (import rust-overlay) ];
   };
 
-  rustVersion = "1.66.0";
-  wasmUnknownUknown = "wasm32-unknown-unknown";
-  wasmWasi = "wasm32-wasi";
+  rustVersion = "1.68.0";
+  wasmTarget = "wasm32-wasi";
 
 
   rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
-    targets = [ wasmWasi ];
+    targets = [ wasmTarget ];
   };
 
   rustPlatformWasm = makeRustPlatform {

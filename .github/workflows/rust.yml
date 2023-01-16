@@ -42,9 +42,9 @@ jobs:
         env:
           cache-name: cache-crates
         with:
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/cargo.lock') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
           path: |
-            ~/target/wasm32-wasi/release/*.wasm
+            ~/target/${{ matrix.target }}/release/*.wasm
   publish:
     if: ${{ github.event.inputs.publish }}
     name: Publish

@@ -10,7 +10,8 @@ async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
     tracing::info!("Welcome to xtask...");
 
-
+    println!("{:?}", env!("CARGO_PKG_NAME"));
+    
     XtaskCLI::default().handle()?;
 
     Ok(())

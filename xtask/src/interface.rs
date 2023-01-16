@@ -10,12 +10,13 @@ use clap::{ArgAction, Parser};
 
 #[derive(Clone, Debug, Eq, Hash, Parser, PartialEq)]
 #[clap(about, author, version)]
+#[clap(propagate_version = true)]
 #[clap(arg_required_else_help(true))]
 pub struct XtaskCLI {
     #[clap(subcommand)]
     pub cmd: Option<Commands>,
     #[arg(action = ArgAction::SetTrue, long, short)]
-    pub debug: bool
+    pub mode: bool
 }
 
 impl XtaskCLI {

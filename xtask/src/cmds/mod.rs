@@ -8,6 +8,7 @@ pub mod build;
 pub mod setup;
 pub mod start;
 pub mod test;
+pub mod wasm;
 
 use anyhow::Result;
 use clap::Subcommand;
@@ -17,7 +18,7 @@ use clap::Subcommand;
 pub enum Commands {
     Build(build::Build),
     Setup(setup::Setup),
-    Start(start::Start),
+    Start(wasm::WasmRunner),
     Test(test::Test),
 }
 

@@ -8,6 +8,7 @@ pub use self::{interface::*, utils::*};
 pub(crate) mod interface;
 pub(crate) mod utils;
 
+pub mod args;
 pub mod cmds;
 pub mod server;
 

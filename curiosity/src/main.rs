@@ -3,7 +3,11 @@
     Contrib: FL03 <jo3mccain@icloud.com> (https://github.com/FL03)
     Description: ... Summary ...
 */
-use curiosity_sdk::AsyncResult;
+pub use self::{primitives::*, utils::*};
+
+pub(crate) mod primitives;
+pub(crate) mod utils;
+
 use std::net::SocketAddr;
 
 use hyper::server::conn::Http;
@@ -15,12 +19,12 @@ use tokio::net::TcpListener;
 async fn main() -> AsyncResult {
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
 
-    Server::new(addr).serve().await?;
+    let server = Server::new(addr);
+    server.serve().await?;
+
     Ok(())
 }
-
-pub struct ServerAddress(pub SocketAddr);
-
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Server {
     pub address: SocketAddr,
 }
@@ -30,9 +34,9 @@ impl Server {
         Self { address }
     }
     pub async fn serve(&self) -> AsyncResult {
-        let listener = TcpListener::bind(self.address).await?;
+        let listener = TcpListener::bind(self.address.clone()).await?;
         loop {
-            let (stream, _) = listener.accept().await?;
+            let (stream, _) = listener.accept().await.expect("Listener failed...");
 
             tokio::task::spawn(async move {
                 if let Err(err) = Http::new().serve_connection(stream, service_fn(echo)).await {

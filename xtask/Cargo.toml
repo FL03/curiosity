@@ -38,6 +38,7 @@ tracing-subscriber = "0.3"
 
 wasmedge-sdk = { features = [], version = "0.7.1" }
 wasmedge-sys = { features = [], version = "0.12.2" }
+wasmtime = { features = [], version = "4" }
 
 [dev-dependencies]
 

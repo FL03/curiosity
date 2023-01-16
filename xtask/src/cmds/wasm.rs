@@ -51,6 +51,6 @@ fn run_wasm(target: WasmTarget, mode: Mode, pkg: &str) -> Result<()> {
     tracing::info!("wasmedgec: Running the AOT compiler...");
     command("wasmedgec", &[workdir.as_str(), artifacts.clone().as_str()])?;
     tracing::info!("wasmtime: Running the application");
-    command("wasmtime", &[artifacts.as_str()])?;
+    command("wasmedge", &[artifacts.as_str()])?;
     Ok(())
 }

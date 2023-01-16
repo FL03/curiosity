@@ -30,16 +30,11 @@ let
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
   };
 in {
-  # app = pkgs.rustPlatform.buildRustPackage (common // {
-  #   pname = "xtask";
-  #   cargoBuildFlags = "-p xtask";
-  # });
-
   wasm = rustPlatformWasm.buildRustPackage (common // {
     pname = "curiosity";
 
     buildPhase = ''
-      cargo build --release --target=wasm32-wasi
+      cargo xtask build --release
     '';  
     installPhase = ''
       mkdir -p $out/lib

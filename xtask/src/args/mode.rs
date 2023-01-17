@@ -12,9 +12,9 @@ pub enum Mode {
     Release = 1,
 }
 
-impl Into<i64> for Mode {
-    fn into(self) -> i64 {
-        self as i64
+impl From<Mode> for i64 {
+    fn from(val: Mode) -> Self {
+        val as i64
     }
 }
 
@@ -40,7 +40,7 @@ impl From<Mode> for bool {
 
 impl ToString for Mode {
     fn to_string(&self) -> String {
-        match self.clone() as i64 {
+        match *self as i64 {
             0 => "debug".to_string(),
             _ => "release".to_string(),
         }

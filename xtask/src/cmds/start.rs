@@ -5,8 +5,7 @@
 */
 use crate::{
     args::{Mode, Target},
-    command,
-    dist_dir
+    command, dist_dir,
 };
 use clap::{ArgAction, Args};
 use scsys::AsyncResult;
@@ -31,17 +30,17 @@ impl WasmRunner {
     pub async fn handle(&self) -> AsyncResult<&Self> {
         tracing::info!("Initializing the wasm run system...");
 
-        let target = self.target.unwrap_or_default().clone();
-        
+        let _target = self.target.unwrap_or_default();
+
         run_wasm("curiosity")?;
-        
+
         Ok(self)
     }
 }
 
 ///
 fn run_wasm(pkg: &str) -> AsyncResult {
-    let path_dist = dist_dir(None).join(format!("{}.aot.wasm", pkg));
+    let path_dist = dist_dir(None).join(format!("{pkg}.aot.wasm"));
     let artifacts = path_dist.to_str().unwrap();
 
     tracing::info!("wasmedge: Running the application (aot)");

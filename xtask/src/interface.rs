@@ -22,7 +22,7 @@ pub struct XtaskCLI {
 impl XtaskCLI {
     pub async fn handle(&self) -> AsyncResult<&Self> {
         let (tx, _rx) = broadcast::channel::<Mode>(1);
-        tx.send(Mode::from(self.release.clone()))?;
+        tx.send(Mode::from(self.release))?;
         handle_cli(self).await?;
         Ok(self)
     }

@@ -15,7 +15,7 @@ pub enum Platform {
 
 impl ToString for Platform {
     fn to_string(&self) -> String {
-        match self.clone() {
+        match *self {
             Self::Linux => "linux".to_string(),
             Self::MacOS => "apple".to_string(),
             Self::Windows => "windows".to_string(),

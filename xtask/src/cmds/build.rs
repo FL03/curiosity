@@ -5,8 +5,7 @@
 */
 use crate::{
     args::{Mode, Target},
-    command,
-    dist_dir
+    command, dist_dir,
 };
 use clap::{ArgAction, Args};
 use scsys::AsyncResult;
@@ -25,14 +24,14 @@ pub struct Build {
 impl Build {
     pub async fn process(&self) -> AsyncResult {
         let (_, mut rx) = broadcast::channel::<Mode>(1);
-        let mode = rx.recv().await?;
+        let _mode = rx.recv().await?;
         Ok(())
     }
     pub async fn handle(&self) -> AsyncResult {
         build_wasm(
             self.release,
-            self.target.unwrap_or_default().clone(),
-            self.workspace.clone(),
+            self.target.unwrap_or_default(),
+            self.workspace,
         )?;
 
         Ok(())
@@ -46,8 +45,8 @@ fn compile_wasmedge(target: Target, mode: Mode, pkg: &str) -> AsyncResult {
         mode.to_string(),
         pkg.clone()
     );
-    let path_wasm =  dist_dir(None).join(format!("{}.wasm", pkg));
-    let path_aot = dist_dir(None).join(format!("{}.aot.wasm", pkg));
+    let path_wasm = dist_dir(None).join(format!("{pkg}.wasm"));
+    let path_aot = dist_dir(None).join(format!("{pkg}.aot.wasm"));
     let (compiled, aot) = (path_wasm.to_str().unwrap(), path_aot.to_str().unwrap());
 
     command("cp", &[workdir.as_str(), compiled])?;

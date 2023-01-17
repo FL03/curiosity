@@ -14,7 +14,7 @@ pub enum Target {
 
 impl ToString for Target {
     fn to_string(&self) -> String {
-        match self.clone() as i64 {
+        match *self as i64 {
             0 => "wasm32-unknown-unknown".to_string(),
             _ => "wasm32-wasi".to_string(),
         }

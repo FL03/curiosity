@@ -4,10 +4,11 @@
     Description: ... Summary ...
 */
 use axum::{http::StatusCode, response::IntoResponse, routing::get_service};
+use scsys::AsyncResult;
 use tower_http::services::ServeDir;
 
 /// Quickstart a server for static assets
-pub async fn wasm_server(path: &str, port: Option<u16>) -> anyhow::Result<()> {
+pub async fn wasm_server(path: &str, port: Option<u16>) -> AsyncResult {
     let serve_dir = get_service(ServeDir::new(path)).handle_error(handle_error);
     let app = axum::Router::new().nest_service("/", serve_dir);
     axum::Server::bind(&std::net::SocketAddr::from((

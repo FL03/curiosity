@@ -4,8 +4,8 @@
     Description: ... Summary ...
 */
 use crate::command;
-use anyhow::Result;
 use clap::{ArgAction, Args};
+use scsys::AsyncResult;
 
 #[derive(Args, Clone, Debug, Default, Eq, Hash, PartialEq)]
 pub struct Test {
@@ -14,13 +14,14 @@ pub struct Test {
 }
 
 impl Test {
-    pub fn handle(&self) -> Result<&Self> {
+    pub async fn handle(&self) -> AsyncResult<&Self> {
         testing()?;
         Ok(self)
     }
 }
 
 ///
-pub fn testing() -> Result<()> {
-    command("cargo", &["test", "--all", "--all-features"])
+pub fn testing() -> AsyncResult {
+    command("cargo", &["test", "--all", "--all-features"])?;
+    Ok(())
 }

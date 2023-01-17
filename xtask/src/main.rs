@@ -3,16 +3,22 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use xtask_sdk::XtaskCLI;
+pub use self::{interface::*, primitives::*, utils::*};
+
+pub(crate) mod interface;
+pub(crate) mod primitives;
+pub(crate) mod utils;
+
+pub mod args;
+pub mod artifacts;
+pub mod cmds;
+pub mod server;
 
 #[tokio::main(flavor = "current_thread")]
-async fn main() -> anyhow::Result<()> {
+async fn main() -> scsys::AsyncResult {
     tracing_subscriber::fmt::init();
-    tracing::info!("Welcome to xtask...");
 
-    println!("{:?}", env!("CARGO_PKG_NAME"));
-    
-    XtaskCLI::default().handle()?;
+    XtaskCLI::default().handle().await?;
 
     Ok(())
 }

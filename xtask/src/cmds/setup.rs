@@ -3,9 +3,9 @@
     Contrib: FL03 <jo3mccain@icloud.com> (https://github.com/FL03)
     Description: ... Summary ...
 */
-use crate::{command, dist_dir};
-use anyhow::Result;
+use crate::{artifacts, command};
 use clap::{ArgAction, Args};
+use scsys::AsyncResult;
 
 #[derive(Args, Clone, Debug, Default, Eq, Hash, PartialEq)]
 pub struct Setup {
@@ -14,24 +14,17 @@ pub struct Setup {
 }
 
 impl Setup {
-    pub fn handle(&self) -> Result<&Self> {
-        setup(self.extras.clone())?;
+    pub async fn handle(&self) -> AsyncResult<&Self> {
+        // Artifacts
+        artifacts(None)?;
+        setup_wasm()?;
+        setup_wasmedge()?;
         Ok(self)
     }
 }
 
-pub fn setup_artifacts() -> Result<()> {
-    if std::fs::create_dir_all(&dist_dir()).is_err() {
-        tracing::info!("Clearing out the previous build");
-        std::fs::remove_dir_all(&dist_dir())?;
-        std::fs::create_dir_all(&dist_dir())?;
-    };
-    Ok(())
-}
-
-pub fn setup(extras: bool) -> Result<()> {
-    // Artifacts
-    setup_artifacts()?;
+pub fn setup_wasm() -> AsyncResult {
+    tracing::info!("Setting up the workspace for WebAssembly...");
     command("rustup", &["default", "nightly"])?;
     command(
         "rustup",
@@ -44,19 +37,12 @@ pub fn setup(extras: bool) -> Result<()> {
             "nightly",
         ],
     )?;
-    command("curl", &["-sSf", "https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/install.sh", "|", "bash"])?;
-    if extras {
-        command(
-            "rustup",
-            &[
-                "component",
-                "add",
-                "clippy",
-                "rustfmt",
-                "--toolchain",
-                "nightly",
-            ],
-        )?;
-    };
+    Ok(())
+}
+
+fn setup_wasmedge() -> AsyncResult {
+    tracing::info!("Installing wasmedge...");
+    command("sh", &["scripts/wasmedge.sh"])?;
+    command("source", &["$HOME/.wasmedge/env"])?;
     Ok(())
 }

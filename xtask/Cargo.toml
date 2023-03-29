@@ -16,7 +16,7 @@ test = false
 [build-dependencies]
 
 [dependencies]
-scsys = { features = [], version = "0.1.40" }
+scsys = { features = [], version = "0.1.42" }
 
 axum = { features = [], version = "0.6" }
 clap = { features = ["cargo", "derive", "env"], version = "4" }

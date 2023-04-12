@@ -15,7 +15,7 @@ use hyper::service::service_fn;
 use hyper::{Body, Method, Request, Response, StatusCode};
 use tokio::net::TcpListener;
 
-#[tokio::main(flavor = "current_thread")]
+#[tokio::main]
 async fn main() -> AsyncResult {
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
 

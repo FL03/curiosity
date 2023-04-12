@@ -25,9 +25,10 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
+        platform: [ macos-latest, ubuntu-latest, windows-latest ]
         target:
-          - wasm32-unknown-unknown
           - wasm32-wasi
     steps:
       - uses: actions/checkout@v3
@@ -36,10 +37,18 @@ jobs:
           rustup default nightly
           rustup target add ${{ matrix.target }} --toolchain nightly
       - run: cargo build --release -v --target ${{ matrix.target }}
+      - name: Cache
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-crates
+        with:
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
+          path: |
+            ~/target/${{ matrix.target }}/release/*.wasm
   publish:
     if: ${{ github.event.inputs.publish }}
     name: Publish
-    # needs: sdk
+    needs: [ build ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

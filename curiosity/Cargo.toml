@@ -18,8 +18,8 @@ doctest = false
 test = true
 
 [[bin]]
-name = "web"
-path = "src/bin/web/main.rs"
+name = "curiosity"
+path = "src/main.rs"
 test = false
 
 [build-dependencies]

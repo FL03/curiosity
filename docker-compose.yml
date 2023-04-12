@@ -1,0 +1,19 @@
+version: "4"
+services:
+  wasi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: curiosity
+    environment:
+      RUST_BACKTRACE: full
+    platform: wasi/wasm32
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    runtime: io.containerd.wasmedge.v1
+
+volumes:
+  cache:
+  config:
+  data:

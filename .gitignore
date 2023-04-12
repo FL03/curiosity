@@ -12,6 +12,7 @@
 **/.DS_STORE/
 **/.artifacts/data/
 **/.cache/
+**/.direnv/
 **/.dist/
 **/.docker/data/
 **/.idea/

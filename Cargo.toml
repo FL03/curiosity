@@ -22,11 +22,11 @@ default-members = [
     "curiosity"
 ]
 exclude = [
-    # "xtask",
+    "xtask",
 ]
 members = [
     "curiosity",
-    "xtask"
+    # "xtask"
 ]
 
 [profile.dev]

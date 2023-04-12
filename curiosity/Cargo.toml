@@ -1,7 +1,7 @@
 [package]
 authors.workspace = true
 categories.workspace = true
-default-run = "web"
+default-run = "curiosity"
 description.workspace = true
 edition.workspace = true
 homepage.workspace = true
@@ -12,11 +12,6 @@ readme.workspace = true
 repository.workspace = true
 version.workspace = true
 
-[lib]
-crate-type = [ "cdylib", "rlib" ]
-doctest = false
-test = true
-
 [[bin]]
 name = "curiosity"
 path = "src/main.rs"
@@ -25,28 +20,16 @@ test = false
 [build-dependencies]
 
 [dependencies]
-dioxus = { features = ["macro"], version = "0.3" }
-dioxus-web = { features = ["hydrate"], version = "0.3" }
-futures.workspace = true
-gloo = { features = [ "futures" ], version = "0.8" }
-js-sys = { features = [], version = "0.3" }
-pulldown-cmark = { features = ["serde"], version = "0.9" }
+anyhow = "1"
+hyper_wasi = { features = ["full"], version = "0.15" }
 serde.workspace = true
 serde_json.workspace = true
+smart-default.workspace = true
 strum.workspace = true
-wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2" }
-wasm-bindgen-futures = "0.4"
-
-[dependencies.web-sys]
-features = [
-    "CanvasRenderingContext2d",
-    "HtmlCanvasElement",
-    "Node"
-]
-version = "0.3"
+tokio_wasi = { features = ["full"], version = "1" }
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3"
+
 
 [package.metadata.docs.rs]
 all-features = true

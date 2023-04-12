@@ -5,8 +5,8 @@
 */
 pub use self::{primitives::*, utils::*};
 
-pub(crate) mod primitives;
-pub(crate) mod utils;
+mod primitives;
+mod utils;
 
 use std::net::SocketAddr;
 

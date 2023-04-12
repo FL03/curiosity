@@ -1,16 +1,20 @@
 [package]
-authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)"]
-categories = []
-description = "curiosity"
-edition = "2021"
-homepage = "https://github.com/FL03/curiosity/wiki"
-keywords = []
-license = "Apache-2.0"
+authors.workspace = true
+categories.workspace = true
+default-run = "web"
+description.workspace = true
+edition.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+license.workspace = true
 name = "curiosity"
-repository = "https://github.com/FL03/curiosity"
-version = "0.1.0"
+readme.workspace = true
+repository.workspace = true
+version.workspace = true
+
 [lib]
 crate-type = [ "cdylib", "rlib" ]
+doctest = false
 test = true
 
 [[bin]]
@@ -20,21 +24,17 @@ test = false
 
 [build-dependencies]
 
-[dev-dependencies]
-wasm-bindgen-test = "0.3"
-
 [dependencies]
 dioxus = { features = ["macro"], version = "0.3" }
 dioxus-web = { features = ["hydrate"], version = "0.3" }
-futures = "0.3.25"
+futures.workspace = true
 gloo = { features = [ "futures" ], version = "0.8" }
-js-sys = { features = [], version = "0.3.60" }
+js-sys = { features = [], version = "0.3" }
 pulldown-cmark = { features = ["serde"], version = "0.9" }
-serde = { features = ["derive"], version = "1" }
-serde_json = "1"
-strum = { features = ["derive"], version = "0.24.1" }
-
-wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2.83"}
+serde.workspace = true
+serde_json.workspace = true
+strum.workspace = true
+wasm-bindgen = { features = [ "serde-serialize" ], version = "0.2" }
 wasm-bindgen-futures = "0.4"
 
 [dependencies.web-sys]
@@ -43,7 +43,10 @@ features = [
     "HtmlCanvasElement",
     "Node"
 ]
-version = "0.3.60"
+version = "0.3"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
 
 [package.metadata.docs.rs]
 all-features = true

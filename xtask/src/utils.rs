@@ -7,11 +7,15 @@ use anyhow::Result;
 use std::path::{Path, PathBuf};
 use std::{collections::HashMap, fs, io, process::Command};
 
+/// A simple function wrapper for executing cargo related commands
+pub fn cargo(args: Vec<&str>) -> Result<()> {
+    command("cargo", args)
+}
 ///
-pub fn command(program: &str, args: &[&str]) -> Result<()> {
+pub fn command(program: &str, args: Vec<&str>) -> Result<()> {
     let mut cmd = Command::new(program);
     cmd.current_dir(project_root());
-    cmd.args(args).status()?;
+    cmd.args(args.as_slice()).status()?;
     Ok(())
 }
 ///
@@ -29,8 +33,8 @@ pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<
     Ok(())
 }
 ///
-pub fn dist_dir() -> PathBuf {
-    project_root().join(".artifacts/dist")
+pub fn dist_dir(target: Option<&str>) -> PathBuf {
+    project_root().join(target.unwrap_or("dist"))
 }
 ///
 pub fn execute_bundle(bundle: HashMap<&str, Vec<Vec<&str>>>) -> Result<()> {

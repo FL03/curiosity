@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 /*
     Appellation: commands <module>
     Contrib: FL03 <jo3mccain@icloud.com>
@@ -15,11 +17,12 @@ pub fn builder(release: bool, workspace: bool) -> Result<()> {
     if workspace {
         args.push("--workspace");
     }
-    command("cargo", args.as_slice())
+    command("cargo", args)
 }
+
 ///
 pub fn clippy() -> Result<()> {
-    command("cargo", &["clippy", "--all", "--allow-dirty", "--fix"])
+    command("cargo", vec!["clippy", "--all", "--allow-dirty", "--fix"])
 }
 ///
 pub fn runner(release: bool) -> Result<()> {
@@ -29,25 +32,42 @@ pub fn runner(release: bool) -> Result<()> {
     }
     args.push("--");
     args.push("--h");
-    command("cargo", args.as_slice())
+    command("cargo", args)
 }
 ///
 pub fn rustfmt() -> Result<()> {
-    command("cargo", &["fmt", "--all"])
+    command("cargo", vec!["fmt", "--all"])
+}
+
+pub struct Artifacts {
+    workdir: PathBuf
+}
+
+impl Artifacts {
+    pub fn new(target: Option<&str>) -> Self {
+        Self {
+            workdir: dist_dir(target)
+        }
+    }
+    pub fn clear(&self) -> Result<()> {
+        if std::fs::create_dir_all(&self.workdir).is_err() {
+            tracing::info!("Clearing out the previous build");
+            std::fs::remove_dir_all(&self.workdir)?;
+            std::fs::create_dir_all(&self.workdir)?;
+        };
+        
+        Ok(())
+    }
 }
 
 pub fn setup(extras: bool) -> Result<()> {
     // Artifacts
-    if std::fs::create_dir_all(&dist_dir()).is_err() {
-        tracing::info!("Clearing out the previous build");
-        std::fs::remove_dir_all(&dist_dir())?;
-        std::fs::create_dir_all(&dist_dir())?;
-    };
-    command("nix", &["flake", "update"])?;
-    command("rustup", &["default", "nightly"])?;
+    Artifacts::new(None).clear()?;
+    command("nix", vec!["flake", "update"])?;
+    command("rustup", vec!["default", "nightly"])?;
     command(
         "rustup",
-        &[
+        vec![
             "target",
             "add",
             "wasm32-unknown-unknown",
@@ -59,7 +79,7 @@ pub fn setup(extras: bool) -> Result<()> {
     if extras {
         command(
             "rustup",
-            &[
+            vec![
                 "component",
                 "add",
                 "clippy",
@@ -68,11 +88,11 @@ pub fn setup(extras: bool) -> Result<()> {
                 "nightly",
             ],
         )?;
-        command("npm", &["install", "-g", "wasm-pack"])?;
+        command("npm", vec!["install", "-g", "wasm-pack"])?;
     };
     Ok(())
 }
 ///
 pub fn testing() -> Result<()> {
-    command("cargo", &["test", "--all", "--all-features"])
+    command("cargo", vec!["test", "--all", "--all-features"])
 }

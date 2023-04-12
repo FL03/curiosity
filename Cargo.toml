@@ -1,10 +1,21 @@
 [workspace.package]
 authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)"]
+categories = []
+description = "curiosity"
 edition = "2021"
 homepage = "https://github.com/FL03/curiosity/wiki"
+keywords = []
 license = "Apache-2.0"
+readme = "README.md"
 repository = "https://github.com/FL03/curiosity"
-version = "0.1.0" # TODO: Update the package version
+version = "0.1.0"
+
+[workspace.dependencies]
+futures = "0.3"
+serde = { features = ["derive"], version = "1" }
+serde_json = "1"
+smart-default = "0.6"
+strum = { features = ["derive"], version = "0.24" }
 
 [workspace]
 default-members = [

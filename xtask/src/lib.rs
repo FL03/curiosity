@@ -3,14 +3,16 @@
     Contrib: FL03 <jo3mccain@icloud.com> (https://github.com/FL03)
     Description: ... Summary ...
 */
+pub use self::{primitives::*, utils::*};
 
-pub use self::{commands::*, utils::*};
 
-pub(crate) mod commands;
-pub(crate) mod utils;
+mod primitives;
+mod utils;
 
-///
-pub type Bundle<T = String> = std::collections::HashMap<T, Vec<Vec<T>>>;
+pub mod commands;
+pub mod pipes;
+pub mod wasm;
+
 
 ///
 #[macro_export]
@@ -22,10 +24,27 @@ macro_rules! cmd {
         {
             $(
                 let mut cmd = std::process::Command::new($x);
-                cmd.current_dir(scsys_xtask::project_root());
+                cmd.current_dir(xtask_sdk::project_root());
                 let mut tmp = Vec::new();
                 $(
                     tmp.push($y);
+                )*
+                cmd.args(tmp.as_slice()).status().expect("");
+            )*
+        }
+    };
+    ($(
+        $x:expr;
+        $y:expr;
+        [ $( $z:expr ),* ]
+    );*) => {
+        {
+            $(
+                let mut cmd = std::process::Command::new($x);
+                cmd.current_dir(xtask_sdk::project_root());
+                let mut tmp = vec![$y];
+                $(
+                    tmp.push($z);
                 )*
                 cmd.args(tmp.as_slice()).status().expect("");
             )*

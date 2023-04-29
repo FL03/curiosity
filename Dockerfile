@@ -32,7 +32,7 @@ RUN /root/.wasmedge/bin/wasmedgec target/wasm32-wasi/release/curiosity.wasm curi
 
 FROM scratch
 
-COPY --from=builder /curiosity.aot.wasm /curiosity.aot.wasm
+COPY --from=builder /workspace/curiosity.aot.wasm /curiosity.aot.wasm
 
 EXPOSE 8080
 

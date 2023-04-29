@@ -25,7 +25,7 @@ COPY . .
 RUN cargo build --release --target wasm32-wasi
 RUN /root/.wasmedge/bin/wasmedgec target/wasm32-wasi/release/curiosity.wasm curiosity.aot.wasm
 
-FROM wasmedge/slim:latest as post-builder
+FROM wasmedge/slim:0.12.0 as post-builder
 
 COPY --from=builder /workspace/target/wasm32-wasi/release/curiosity.wasm /curiosity.wasm
 RUN wasmedgec curiosity.wasm curiosity.aot.wasm
